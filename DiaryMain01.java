@@ -6,8 +6,11 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.TextArea;
 import java.awt.TextField;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -19,7 +22,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
-public class DiaryMain01 extends JFrame implements ActionListener{
+public class DiaryMain01 extends JFrame implements ActionListener, KeyListener{
 
 	Container cp;
 	
@@ -36,7 +39,7 @@ public class DiaryMain01 extends JFrame implements ActionListener{
 	//////////////////////////////////////
 	public DiaryMain01() {
 		
-		super("감성 다이어리");
+		super("공유 다이어리");
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setBounds(300, 50, 1000, 700);
@@ -59,7 +62,7 @@ public class DiaryMain01 extends JFrame implements ActionListener{
 		
 		
 		//제목 - 제목이 먼저 와야함
-		title = new JLabel(" My Diary");
+		title = new JLabel(" We Diary");
 		title.setFont(new Font("Parisienne", Font.BOLD, 65));
 		title.setForeground(Color.white);	//폰트색
 		title.setBounds(330, 150, 600, 200);
@@ -70,28 +73,30 @@ public class DiaryMain01 extends JFrame implements ActionListener{
 		id = new JLabel("ID:");
 		id.setFont(new Font("Agency FB", Font.BOLD, 30));
 		id.setForeground(Color.white);
-		id.setBounds(385, 275, 500, 200);
+		id.setBounds(385, 255, 500, 200);
 		panel.add(id);
 		
 		//PW
 		pw = new JLabel("PW:");
 		pw.setFont(new Font("Agency FB", Font.BOLD, 25));
 		pw.setForeground(Color.white);
-		pw.setBounds(385, 325, 500, 200);
+		pw.setBounds(385, 305, 500, 200);
 		panel.add(pw);
 		
 		
 		//TextField
 		//ID
 		tfId = new JTextField();
-		tfId.setBounds(435, 365, 160, 25);
+		tfId.setBounds(435, 345, 160, 25);
 		tfId.setBorder(new LineBorder(Color.yellow));
 		panel.add(tfId);
 		
 		//PW
 		tfPw = new JPasswordField();
-		tfPw.setBounds(435, 415, 160, 25);
+		tfPw.setBounds(435, 395, 160, 25);
 		tfPw.setBorder(new LineBorder(Color.yellow));
+		//여기서 엔터키 입력시 이벤트 기능추가
+		tfPw.addKeyListener(this);
 		panel.add(tfPw);
 		
 		
@@ -164,7 +169,13 @@ public class DiaryMain01 extends JFrame implements ActionListener{
 			
 			
 			//ID와 PW가 정상 입력될 경우
-			showMain02 
+			DiaryMain02 diaryMain02 = new DiaryMain02();
+			
+			//메인창02
+			diaryMain02.initDesign(id);
+			
+			//로그인하면 안보이게
+			this.setVisible(false);
 			
 			
 		} else if (ob==btnJoin) {
@@ -174,6 +185,34 @@ public class DiaryMain01 extends JFrame implements ActionListener{
 		}
 		
 	}
+	
+	
+	
+	//////////////////////////////////////////////////
+	//엔터키 입력시 로그인
+	//키와 버튼 이벤트 둘 다 처리
+	@Override
+	public void keyTyped(KeyEvent e) {
+		
+	}
+	
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void keyPressed(KeyEvent e) {
+				
+		int key = e.getKeyCode();
+		if (key==KeyEvent.VK_ENTER) {
+			Toolkit.getDefaultToolkit().beep();
+			btnLogIn.doClick();
+		}
+		
+	}
+	
 	
 	
 	/////////////////////////////////////////

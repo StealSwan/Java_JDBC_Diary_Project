@@ -50,6 +50,49 @@ public class JoinModel {
 		
 	}
 	
+	
+	/////////////////////////////////////////////
+	//Select
+	//다 필요없고 Main02서 유저 이름 호출용
+	public String showName(String id) {
+		
+		JoinDTO dto = new JoinDTO();
+		
+		//JoinDTO 값을 먹는 Vector
+		Vector<JoinDTO> list = new Vector<JoinDTO>();
+		
+		//DCL의 기본 기능들을 넣어놓는 것이기에 접속은 필수
+		Connection conn = db.getLoclaConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		//sql
+		String sql = "Select name from join where id = ?";
+		
+		
+		//후속
+		try {
+			pstmt = conn.prepareStatement(sql);
+			
+			//배치
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+
+				//DTO에 넣어주기
+				dto.setName(rs.getString("name"));
+			}
+						
+		} catch (SQLException e) {
+			
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		
+		return dto.getName();
+	}
+	
 
 	/////////////////////////////////////////////	
 	public static void main(String[] args) {
