@@ -4,7 +4,11 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.Label;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -15,19 +19,26 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+
+import quiz0908.HelloDTO;
+import quiz0908.HelloModel;
 
 /////////////////////////////////////////
 //메인 + Select창 구현
-public class DiaryMain02 extends JFrame implements ActionListener{
+public class DiaryMain02 extends JFrame implements ActionListener, KeyListener{
 
 	Container cp;
 	
 	JPanel panel;
 	
-	JLabel background, welcome;
+	JLabel background, welcome, search;
+
+	JTextField tfSearch;
 	
-	JButton btnAdd, btnDel, btnUpdate;
+	JButton btnSel, btnAdd, btnDel, btnUpdate, btnSearch, btnRefresh;
 	
 	//테이블 가져오기
 	DefaultTableModel model;
@@ -46,10 +57,14 @@ public class DiaryMain02 extends JFrame implements ActionListener{
 	String id = "";
 	
 	
+	//둥근버튼
+	RoundButton roundButton = new RoundButton();
+	
+	
 	//////////////////////////////////////
 	public DiaryMain02() {
 		
-		super("감성 다이어리");
+		super("We 다이어리");
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setBounds(300, 50, 1000, 700);
@@ -105,12 +120,88 @@ public class DiaryMain02 extends JFrame implements ActionListener{
 		
 		//JScrollPane에 올리기
 		JScrollPane js = new JScrollPane(table);
-		js.setBounds(100, 105, 800, 500);
+		js.setBounds(100, 155, 800, 440);
 		this.add(js);
 		
 		
 		//테이블 출력
 		showTable();
+		
+		
+		////////////////////////////////////////////////////////////////
+		
+		//검색 라벨
+		search = new JLabel("작성자 검색:");
+		search.setFont(new Font("휴먼편지체", Font.BOLD, 20));
+		search.setForeground(Color.white);
+		search.setBounds(270, 75, 500, 100);
+		panel.add(search);
+		
+		//검색창
+		tfSearch = new JTextField();
+		tfSearch.setBounds(390, 113, 240, 25);
+		tfSearch.setBorder(new LineBorder(Color.pink));
+		//여기서 엔터키 입력시 이벤트 기능추가
+		tfSearch.addKeyListener(this);
+		panel.add(tfSearch);
+		
+		//검색버튼
+		btnSearch = new JButton(new ImageIcon("C:\\Users\\user\\Desktop\\프로젝트\\자바 스윙 다이어리\\이미지\\돋보기.png"));
+		btnSearch.setBounds(635, 100, 60, 45);
+		//마우스 올라갈경우 이미지 변경
+		btnSearch.setRolloverIcon(new ImageIcon("C:\\Users\\user\\Desktop\\프로젝트\\자바 스윙 다이어리\\이미지\\돋보기2.png"));
+		btnSearch.setBorderPainted(false);
+		btnSearch.setContentAreaFilled(false);
+		btnSearch.setFocusPainted(false);
+		btnSearch.setOpaque(false);
+		btnSearch.addActionListener(this);
+		panel.add(btnSearch);
+
+		////////////////////////////////////////////////////////////////
+		
+		//버튼들 추가
+		btnAdd = new RoundButton("글쓰기");
+		btnUpdate = new RoundButton("수정하기");
+		btnDel = new RoundButton("지우기");
+		btnRefresh = new RoundButton("새로고침");
+		
+		btnDel.setFont(getFont());
+		btnDel.setFont(new Font("휴먼편지체", Font.BOLD, 17));
+		btnDel.setForeground(Color.black);
+		btnDel.setBackground(Color.pink);
+		btnDel.setBorder(new LineBorder(Color.black));
+		btnDel.setBounds(850, 620, 50, 30);
+		btnDel.addActionListener(this);
+		panel.add(btnDel);
+		
+		btnUpdate.setFont(getFont());
+		btnUpdate.setFont(new Font("휴먼편지체", Font.BOLD, 16));
+		btnUpdate.setForeground(Color.black);
+		btnUpdate.setBackground(Color.pink);
+		btnUpdate.setBorder(new LineBorder(Color.black));
+		btnUpdate.setBounds(777, 620, 65, 30);
+		btnUpdate.addActionListener(this);
+		panel.add(btnUpdate);
+		
+		btnAdd.setFont(getFont());
+		btnAdd.setFont(new Font("휴먼편지체", Font.BOLD, 17));
+		btnAdd.setForeground(Color.black);
+		btnAdd.setBackground(Color.pink);
+		btnAdd.setBorder(new LineBorder(Color.black));
+		btnAdd.setBounds(720, 620, 50, 30);
+		btnAdd.addActionListener(this);
+		panel.add(btnAdd);
+		
+		btnRefresh.setFont(getFont());
+		btnRefresh.setFont(new Font("휴먼편지체", Font.BOLD, 17));
+		btnRefresh.setForeground(Color.black);
+		btnRefresh.setBackground(Color.yellow);
+		btnRefresh.setBorder(new LineBorder(Color.black));
+		btnRefresh.setBounds(642, 620, 70, 30);
+		btnRefresh.addActionListener(this);
+		panel.add(btnRefresh);
+		
+		////////////////////////////////////////////////////////////////
 		
 		
 		//배경 이미지 설정
@@ -153,6 +244,93 @@ public class DiaryMain02 extends JFrame implements ActionListener{
 	}
 	
 	
+	
+	
+	//////////////////////////////////////////////////
+	//버튼 이벤트 구현
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		Object ob = e.getSource();
+		
+		//Insert
+		if (ob==btnAdd) {
+			
+			
+		//Update
+		} else if (ob==btnUpdate) {
+			
+			
+		//Delete
+		} else if (ob==btnDel) {
+			
+			//선택한 행 번호를 받고 그걸 통해 값을 얻는다!!
+			//!!!!!!!!!!!!
+			int row = table.getSelectedRow();
+			Object value = table.getValueAt(row, 0);
+			
+			//얻은 값을 num값으로 변환!!!
+			int num = Integer.parseInt((String) value);
+			System.out.println(num);
+					
+
+			//row값 전달
+			//모델 객체 생성
+			DiaryDTO dto = new DiaryDTO();
+			diaryModel.deleteDiary(num);
+			
+			list = diaryModel.showAllTable();
+			
+			showTable();
+			
+			
+		//Search	
+		} else if (ob==btnSearch) {
+			
+			String writer = tfSearch.getText().trim();
+			
+			Search search = new Search();
+			//모델과 검색값 전달
+			//출력 메서드는 동일함 - 그대신 전체 출력할 리스트의 값이 달라지는 것임
+			list = search.search(model, writer);
+			showTable();
+			
+			
+		//Refresh	
+		} else if (ob==btnRefresh) {
+			
+			//다시 출력할 리스트에 모델을 통해 값을 받아옴
+			list = diaryModel.showAllTable();
+			
+			showTable();
+		}
+	}
+	
+	
+	///////////////////////////////////////////////////
+	//엔터키 입력시 로그인
+	//키와 버튼 이벤트 둘 다 처리
+	@Override
+	public void keyTyped(KeyEvent e) {
+		
+	}
+	
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void keyPressed(KeyEvent e) {
+				
+		int key = e.getKeyCode();
+		if (key==KeyEvent.VK_ENTER) {
+			Toolkit.getDefaultToolkit().beep();
+			btnSearch.doClick();
+		}
+		
+	}
 	
 	///////////////////////////////////////////////////
 	public static void main(String[] args) {
