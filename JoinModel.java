@@ -90,6 +90,7 @@ public class JoinModel {
 			db.dbClose(rs, pstmt, conn);
 		}
 		
+		//여기서 id값을 리턴하지 않으면 사라짐?
 		return dto.getName();
 	}
 	

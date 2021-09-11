@@ -22,6 +22,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+
 public class DiaryMain01 extends JFrame implements ActionListener, KeyListener{
 
 	Container cp;
@@ -170,6 +171,10 @@ public class DiaryMain01 extends JFrame implements ActionListener, KeyListener{
 			
 			//ID와 PW가 정상 입력될 경우
 			DiaryMain02 diaryMain02 = new DiaryMain02();
+			
+			//ID 전달
+			JoinModel joinModel = new JoinModel();
+		
 			
 			//메인창02
 			diaryMain02.initDesign(id);

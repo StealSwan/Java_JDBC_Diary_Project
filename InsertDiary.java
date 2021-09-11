@@ -16,13 +16,19 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+
+//ID 값을 쭉 전달해야하는데 ActionListener를 내부 변수로 지정할 경우, id값이 전달 안되기에
+//한 클래스 안에서 처리해주었다!!!
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 public class InsertDiary extends JFrame implements ActionListener{
 
 	//모델들
+	DiaryModel diaryModel = new DiaryModel();
 	DiaryDTO diaryDTO = new DiaryDTO();
 	
 	Container cp;
@@ -42,16 +48,16 @@ public class InsertDiary extends JFrame implements ActionListener{
 	
 	////////////////////////////////////////////////////////
 	//기본
-	public InsertDiary() {
+	public InsertDiary(String id) {
 		
 		super("We 다이어리");
 		
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		//this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setBounds(300, 50, 600, 700);
 		//창 사이즈 변경불가
 		this.setResizable(false);
 		//디자인 보이게 하기
-		initDesign();
+		initDesign(id);
 		this.setVisible(true);
 		
 	}
@@ -59,7 +65,7 @@ public class InsertDiary extends JFrame implements ActionListener{
 	
 	////////////////////////////////////////////////////////
 	//init
-	public void initDesign() {
+	public void initDesign(String id) {
 		
 		//배경 이미지가 들어갈 공간 할당
 		panel = new JPanel();
@@ -127,7 +133,38 @@ public class InsertDiary extends JFrame implements ActionListener{
 		btnAdd.setForeground(Color.black);
 		btnAdd.setBackground(Color.pink);
 		btnAdd.setBounds(520, 620, 50, 30);
-		btnAdd.addActionListener(this);
+		btnAdd.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				//경로를 넣어줘야하기에 DTO 클래스 생성
+				DiaryDTO dto = new DiaryDTO();
+				
+				//내용 입력 안할 경우
+				if(tfTitle.getText().length()==0) {
+					JOptionPane.showMessageDialog(null, "제목을 입력해주세요");
+					return;
+							
+				} else if (tfContent.getText().length()==0) {
+					JOptionPane.showMessageDialog(null, "내용을 입력해주세요");
+					return;
+				}
+				
+				//넣어줘야하는 모든 dto에 값 넣어주기
+				//textField에 작성된 값 넣기
+				dto.setTitle(tfTitle.getText());
+				dto.setContent(tfContent.getText());
+				dto.setImg(tfImg.getText());
+				
+				//아이디값도 전달
+				diaryModel.insertDiary(dto, id);
+				
+				//현재창 닫기
+				setVisible(false);
+				
+			}
+		});
 		panel.add(btnAdd);
 		
 		
@@ -192,11 +229,24 @@ public class InsertDiary extends JFrame implements ActionListener{
 			
 			
 		//작성완료	
-		} else if (ob==btnAdd) {
-			
-			DiaryDTO diaryDTO = new DiaryDTO();
-			
 		}
+//		else if (ob==btnAdd) {
+//			
+//			//경로를 넣어줘야하기에 DTO 클래스 생성
+//			DiaryDTO dto = new DiaryDTO();
+//			
+//			//넣어줘야하는 모든 dto에 값 넣어주기
+//			//textField에 작성된 값 넣기
+//			dto.setTitle(tfTitle.getText());
+//			dto.setContent(tfContent.getText());
+//			dto.setImg(tfImg.getText());
+//			
+//			//아이디값도 전달
+//			diaryModel.insertDiary(dto, id);
+//			
+//			//현재창 닫기
+//			this.setVisible(false);
+//		}
 	}
 	
 	
@@ -226,11 +276,11 @@ public class InsertDiary extends JFrame implements ActionListener{
 	
 	
 	//////////////////////////////////////////////////////
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-		new InsertDiary();
+//	public static void main(String[] args) {
+//		// TODO Auto-generated method stub
+//		
+//		new InsertDiary();
 
-	}
+//	}
 
 }

@@ -9,12 +9,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -26,11 +29,15 @@ import javax.swing.table.DefaultTableModel;
 import quiz0908.HelloDTO;
 import quiz0908.HelloModel;
 
-/////////////////////////////////////////
-//메인 + Select창 구현
+
+//ID 값을 쭉 전달해야하는데 ActionListener를 내부 변수로 지정할 경우, id값이 전달 안되기에
+//한 클래스 안에서 전부 처리해주었다!!!
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 public class DiaryMain02 extends JFrame implements ActionListener, KeyListener{
 
 	Container cp;
+	
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
 	JPanel panel;
 	
@@ -38,7 +45,7 @@ public class DiaryMain02 extends JFrame implements ActionListener, KeyListener{
 
 	JTextField tfSearch;
 	
-	JButton btnSel, btnAdd, btnDel, btnUpdate, btnSearch, btnRefresh;
+	JButton btnSel, btnAdd, btnDel, btnSearch, btnRefresh;
 	
 	//테이블 가져오기
 	DefaultTableModel model;
@@ -91,7 +98,8 @@ public class DiaryMain02 extends JFrame implements ActionListener, KeyListener{
 		//ID를 통해 이름 가져오기!!!!
 		//!!이거 구현하는데 죽을뻔했음...!!!
 		JoinModel joinModel = new JoinModel();
-		welcome = new JLabel("별을 노래하는 마음으로 " + joinModel.showName(id) + " 님이 늘 행복하시길!");
+		String writer = joinModel.showName(id);
+		welcome = new JLabel("별을 노래하는 마음으로 " + writer + " 님이 늘 행복하시길!");
 		welcome.setBounds(195, 10, 1000, 100);
 		welcome.setFont(new Font("나눔손글씨 다시 시작해", Font.BOLD, 40));
 		welcome.setForeground(Color.pink);
@@ -174,7 +182,6 @@ public class DiaryMain02 extends JFrame implements ActionListener, KeyListener{
 		
 		//버튼들 추가
 		btnAdd = new RoundButton("글쓰기");
-		btnUpdate = new RoundButton("수정하기");
 		btnDel = new RoundButton("지우기");
 		btnSel = new RoundButton("읽기");
 		
@@ -183,35 +190,126 @@ public class DiaryMain02 extends JFrame implements ActionListener, KeyListener{
 		btnDel.setBackground(Color.pink);
 		btnDel.setBorder(new LineBorder(Color.black));
 		btnDel.setBounds(835, 615, 65, 30);
-		btnDel.addActionListener(this);
+		btnDel.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				//선택한 행 번호를 받고 그걸 통해 값을 얻는다!!
+				//!!!!!!!!!!!!
+				int row = table.getSelectedRow();
+				Object value = table.getValueAt(row, 0);
+				
+				//얻은 값을 num값으로 변환!!!
+				int num = Integer.parseInt((String) value);
+				//System.out.println(num);
+				
+				
+				//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				//id값이 다를 경우
+				//테이블에 id값이 저장되어 있지 않기에 다른 곳에서 비교해야함
+				//우선 선택된 게시물의 num값을 가져와야함 - 메서드 호출해서 해당 게시물의 id값만 가져옴
+				String postId = diaryModel.showOneId(num);
+				
+				//검산용 출력값
+				System.out.println(num);
+				//!!!!!!!!!!!!
+				//삭제도 마찬가지로 추상클래스면 id값이 전달 안된다
+				System.out.println(id);
+				System.out.println(postId);
+				
+				//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				//String 끼리의 값은 equals로 비교하기!!!!!!!!!!!!!
+				if(!id.equals(postId)) {
+					JOptionPane.showMessageDialog(null, "삭제권한이 없습니다");
+					return;					
+				}
+						
+	
+				//row값 전달
+				//모델 객체 생성
+				DiaryDTO dto = new DiaryDTO();
+				diaryModel.deleteDiary(num);
+				
+				list = diaryModel.showAllTable();
+				
+				showTable();
+				
+			}
+		});
 		panel.add(btnDel);
 		
-		btnUpdate.setFont(new Font("휴먼편지체", Font.BOLD, 16));
-		btnUpdate.setForeground(Color.black);
-		btnUpdate.setBackground(Color.pink);
-		btnUpdate.setBorder(new LineBorder(Color.black));
-		btnUpdate.setBounds(767, 615, 65, 30);
-		btnUpdate.addActionListener(this);
-		panel.add(btnUpdate);
 		
 		btnAdd.setFont(new Font("휴먼편지체", Font.BOLD, 17));
 		btnAdd.setForeground(Color.black);
 		btnAdd.setBackground(Color.pink);
 		btnAdd.setBorder(new LineBorder(Color.black));
 		btnAdd.setBounds(700, 615, 65, 30);
-		btnAdd.addActionListener(this);
+		btnAdd.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				//System.out.println(id); - 검산용
+				InsertDiary insertDiary = new InsertDiary(id);
+				
+			}
+		});
 		panel.add(btnAdd);
 		
 		btnSel.setFont(new Font("휴먼편지체", Font.BOLD, 17));
 		btnSel.setForeground(Color.black);
 		btnSel.setBackground(Color.pink);
 		btnSel.setBorder(new LineBorder(Color.black));
-		btnSel.setBounds(632, 615, 65, 30);
-		btnSel.addActionListener(this);
+		btnSel.setBounds(767, 615, 65, 30);
+		btnSel.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				int row = table.getSelectedRow();
+				
+				//아무것도 선택안할 경우 에러처리
+				if(row==-1) {
+					JOptionPane.showMessageDialog(null, "읽을 내용을 선택해주세요");
+					return;
+				}
+				
+				//!!!!!!row값을 토대로 값찾기!!!!!
+				//getValueAt
+				int num = Integer.parseInt((String) table.getValueAt(row, 0));
+				
+				
+				//볼 값들만 DTO에 담아서
+				DiaryDTO dto = new DiaryModel().showOneTable(num);
+				
+				//셀렉트 폼 가져오기
+				SelectDiary selectDiary = new SelectDiary(id, num);
+				
+				//가져온 DTO 값을 토대로 세팅
+				selectDiary.tfTitle.setText(dto.getTitle());
+				selectDiary.tfImg.setText(dto.getImg());
+				selectDiary.tfContent.setText(dto.getContent());
+				
+				//Day는 Date인데 setText를 해줘야 하기에 변환과정이 필요
+				//날짜 출력을 위한 작업
+				SimpleDateFormat sysdate = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분");
+				Calendar time = Calendar.getInstance();
+				String date = sysdate.format(dto.getDay());
+				selectDiary.outDate.setText(date);
+				
+				
+				//!!!!이미지 세팅하기!!!!
+				//이미지는 테이블에 저장되어 있지 않음
+				//따라서 Vector 값에서 가져와야 함
+				String img = diaryModel.showOneImg(num);
+				selectDiary.imageName = img;
+				selectDiary.photoDraw.repaint();
+			}
+		});
 		panel.add(btnSel);
 		
 		////////////////////////////////////////////////////////////////
-		
 		
 		//배경 이미지 설정
 		background = new JLabel();
@@ -220,7 +318,102 @@ public class DiaryMain02 extends JFrame implements ActionListener, KeyListener{
 	    background.setSize(1000, 700);
 	    panel.add(background);
 		
+	}	
+	
+	
+	//////////////////////////////////////////////////
+	//Action 리스너에 변수값 전달
+	
+	
+	//////////////////////////////////////////////////
+	//버튼 이벤트 구현
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		Object ob = e.getSource();
+		
+		//Insert
+//		if (ob==btnAdd) {
+//			
+//			//검산용-어디서 값이 소실됐는지 알아볼거임
+//			System.out.println(id);
+//			InsertDiary insertDiary = new InsertDiary(id);
+//			
+//		//Select
+//		 if (ob==btnSel) {
+//			
+//			int row = table.getSelectedRow();
+//			
+//		
+//		} else
+			
+		
+//		//Delete	
+//		if (ob==btnDel) {
+//			
+//			//선택한 행 번호를 받고 그걸 통해 값을 얻는다!!
+//			//!!!!!!!!!!!!
+//			int row = table.getSelectedRow();
+//			Object value = table.getValueAt(row, 0);
+//			
+//			//얻은 값을 num값으로 변환!!!
+//			int num = Integer.parseInt((String) value);
+//			//System.out.println(num);
+//			
+//			
+//			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//			//id값이 다를 경우
+//			//테이블에 id값이 저장되어 있지 않기에 다른 곳에서 비교해야함
+//			//우선 선택된 게시물의 num값을 가져와야함 - 메서드 호출해서 해당 게시물의 id값만 가져옴
+//			String postId = diaryModel.showOneId(num);
+//			
+//			//검산용 출력값
+//			System.out.println(num);
+//			//!!!!!!!!!!!!
+//			//삭제도 마찬가지로 추상클래스면 id값이 전달 안된다
+//			System.out.println(id);
+//			System.out.println(postId);
+//			
+//			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//			//String 끼리의 값은 equals로 비교하기!!!!!!!!!!!!!
+//			if(!id.equals(postId)) {
+//				JOptionPane.showMessageDialog(null, "삭제권한이 없습니다");
+//				return;					
+//			}
+//					
+//
+//			//row값 전달
+//			//모델 객체 생성
+//			DiaryDTO dto = new DiaryDTO();
+//			diaryModel.deleteDiary(num);
+//			
+//			list = diaryModel.showAllTable();
+//			
+//			showTable();
+			
+			
+		//Search	
+		 if (ob==btnSearch) {
+			
+			String writer = tfSearch.getText().trim();
+			
+			Search search = new Search();
+			//모델과 검색값 전달
+			//출력 메서드는 동일함 - 그대신 전체 출력할 리스트의 값이 달라지는 것임
+			list = search.search(model, writer);
+			showTable();
+			
+			
+		//Refresh	
+		} else if (ob==btnRefresh) {
+			
+			//다시 출력할 리스트에 모델을 통해 값을 받아옴
+			list = diaryModel.showAllTable();
+			
+			showTable();
+		}
 	}
+	
 	
 	
 	//////////////////////////////////////////////////
@@ -253,69 +446,6 @@ public class DiaryMain02 extends JFrame implements ActionListener, KeyListener{
 	}
 	
 	
-	
-	
-	//////////////////////////////////////////////////
-	//버튼 이벤트 구현
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		Object ob = e.getSource();
-		
-		//Insert
-		if (ob==btnAdd) {
-			
-			
-		//Update
-		} else if (ob==btnUpdate) {
-			
-			
-		//Delete
-		} else if (ob==btnDel) {
-			
-			//선택한 행 번호를 받고 그걸 통해 값을 얻는다!!
-			//!!!!!!!!!!!!
-			int row = table.getSelectedRow();
-			Object value = table.getValueAt(row, 0);
-			
-			//얻은 값을 num값으로 변환!!!
-			int num = Integer.parseInt((String) value);
-			System.out.println(num);
-					
-
-			//row값 전달
-			//모델 객체 생성
-			DiaryDTO dto = new DiaryDTO();
-			diaryModel.deleteDiary(num);
-			
-			list = diaryModel.showAllTable();
-			
-			showTable();
-			
-			
-		//Search	
-		} else if (ob==btnSearch) {
-			
-			String writer = tfSearch.getText().trim();
-			
-			Search search = new Search();
-			//모델과 검색값 전달
-			//출력 메서드는 동일함 - 그대신 전체 출력할 리스트의 값이 달라지는 것임
-			list = search.search(model, writer);
-			showTable();
-			
-			
-		//Refresh	
-		} else if (ob==btnRefresh) {
-			
-			//다시 출력할 리스트에 모델을 통해 값을 받아옴
-			list = diaryModel.showAllTable();
-			
-			showTable();
-		}
-	}
-	
-	
 	///////////////////////////////////////////////////
 	//엔터키 입력시 로그인
 	//키와 버튼 이벤트 둘 다 처리
@@ -343,9 +473,8 @@ public class DiaryMain02 extends JFrame implements ActionListener, KeyListener{
 	
 	///////////////////////////////////////////////////
 	public static void main(String[] args) {
-
-		new DiaryMain02();
 		
+		new DiaryMain02();
 	}
 
 }
