@@ -147,7 +147,7 @@ public class DiaryMain02 extends JFrame implements ActionListener, KeyListener{
 		
 		//검색버튼
 		btnSearch = new JButton(new ImageIcon("C:\\Users\\user\\Desktop\\프로젝트\\자바 스윙 다이어리\\이미지\\돋보기.png"));
-		btnSearch.setBounds(635, 100, 60, 45);
+		btnSearch.setBounds(635, 100, 50, 45);
 		//마우스 올라갈경우 이미지 변경
 		btnSearch.setRolloverIcon(new ImageIcon("C:\\Users\\user\\Desktop\\프로젝트\\자바 스윙 다이어리\\이미지\\돋보기2.png"));
 		btnSearch.setBorderPainted(false);
@@ -156,6 +156,19 @@ public class DiaryMain02 extends JFrame implements ActionListener, KeyListener{
 		btnSearch.setOpaque(false);
 		btnSearch.addActionListener(this);
 		panel.add(btnSearch);
+		
+		
+		//새로고침
+		btnRefresh = new JButton(new ImageIcon("C:\\Users\\user\\Desktop\\프로젝트\\자바 스윙 다이어리\\이미지\\새로고침.png"));
+		btnRefresh.setBounds(685, 100, 60, 45);
+		//마우스 올라갈경우 이미지 변경
+		btnRefresh.setRolloverIcon(new ImageIcon("C:\\Users\\user\\Desktop\\프로젝트\\자바 스윙 다이어리\\이미지\\새로고침2.png"));
+		btnRefresh.setBorderPainted(false);
+		btnRefresh.setContentAreaFilled(false);
+		btnRefresh.setFocusPainted(false);
+		btnRefresh.setOpaque(false);
+		btnRefresh.addActionListener(this);
+		panel.add(btnRefresh);
 
 		////////////////////////////////////////////////////////////////
 		
@@ -163,43 +176,39 @@ public class DiaryMain02 extends JFrame implements ActionListener, KeyListener{
 		btnAdd = new RoundButton("글쓰기");
 		btnUpdate = new RoundButton("수정하기");
 		btnDel = new RoundButton("지우기");
-		btnRefresh = new RoundButton("새로고침");
+		btnSel = new RoundButton("읽기");
 		
-		btnDel.setFont(getFont());
 		btnDel.setFont(new Font("휴먼편지체", Font.BOLD, 17));
 		btnDel.setForeground(Color.black);
 		btnDel.setBackground(Color.pink);
 		btnDel.setBorder(new LineBorder(Color.black));
-		btnDel.setBounds(850, 620, 50, 30);
+		btnDel.setBounds(835, 615, 65, 30);
 		btnDel.addActionListener(this);
 		panel.add(btnDel);
 		
-		btnUpdate.setFont(getFont());
 		btnUpdate.setFont(new Font("휴먼편지체", Font.BOLD, 16));
 		btnUpdate.setForeground(Color.black);
 		btnUpdate.setBackground(Color.pink);
 		btnUpdate.setBorder(new LineBorder(Color.black));
-		btnUpdate.setBounds(777, 620, 65, 30);
+		btnUpdate.setBounds(767, 615, 65, 30);
 		btnUpdate.addActionListener(this);
 		panel.add(btnUpdate);
 		
-		btnAdd.setFont(getFont());
 		btnAdd.setFont(new Font("휴먼편지체", Font.BOLD, 17));
 		btnAdd.setForeground(Color.black);
 		btnAdd.setBackground(Color.pink);
 		btnAdd.setBorder(new LineBorder(Color.black));
-		btnAdd.setBounds(720, 620, 50, 30);
+		btnAdd.setBounds(700, 615, 65, 30);
 		btnAdd.addActionListener(this);
 		panel.add(btnAdd);
 		
-		btnRefresh.setFont(getFont());
-		btnRefresh.setFont(new Font("휴먼편지체", Font.BOLD, 17));
-		btnRefresh.setForeground(Color.black);
-		btnRefresh.setBackground(Color.yellow);
-		btnRefresh.setBorder(new LineBorder(Color.black));
-		btnRefresh.setBounds(642, 620, 70, 30);
-		btnRefresh.addActionListener(this);
-		panel.add(btnRefresh);
+		btnSel.setFont(new Font("휴먼편지체", Font.BOLD, 17));
+		btnSel.setForeground(Color.black);
+		btnSel.setBackground(Color.pink);
+		btnSel.setBorder(new LineBorder(Color.black));
+		btnSel.setBounds(632, 615, 65, 30);
+		btnSel.addActionListener(this);
+		panel.add(btnSel);
 		
 		////////////////////////////////////////////////////////////////
 		

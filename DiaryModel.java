@@ -66,7 +66,10 @@ public class DiaryModel {
 	
 	////////////////////////////////////////////
 	//Insert
-	public void insertDiary(DiaryDTO dto) {
+	public void insertDiary(DiaryDTO dto, String id) {
+		
+		//writer 호출
+		JoinModel joinModel = new JoinModel();
 		
 		//DCL의 기본 기능들을 넣어놓는 것이기에 접속은 필수
 		Connection conn = db.getLoclaConnection();
@@ -83,9 +86,12 @@ public class DiaryModel {
 			//DTO 객체는 이미 받았으므로 따로 생성할 필요없음
 			
 			//값 배분
-			pstmt.setString(1, dto.getName());
-			pstmt.setString(2, dto.getAddr());
-			
+			pstmt.setString(1, dto.getId());
+			pstmt.setString(2, dto.getWriter());
+			pstmt.setString(3, dto.getTitle());
+			pstmt.setString(4, dto.getContent());
+			pstmt.setString(5, dto.getImg());
+
 			//업데이트
 			pstmt.execute();
 			
