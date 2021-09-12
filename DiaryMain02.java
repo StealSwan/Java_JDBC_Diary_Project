@@ -175,7 +175,22 @@ public class DiaryMain02 extends JFrame implements ActionListener, KeyListener{
 		btnRefresh.setContentAreaFilled(false);
 		btnRefresh.setFocusPainted(false);
 		btnRefresh.setOpaque(false);
-		btnRefresh.addActionListener(this);
+		//tfSearch 초기화를 위한 변수전달용
+		btnRefresh.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				//tfSearch 호출용
+				tfSearch.setText("");
+				
+				//다시 출력할 리스트에 모델을 통해 값을 받아옴
+				list = diaryModel.showAllTable();
+				
+				showTable();
+				
+			}
+		});
 		panel.add(btnRefresh);
 
 		////////////////////////////////////////////////////////////////
@@ -405,14 +420,15 @@ public class DiaryMain02 extends JFrame implements ActionListener, KeyListener{
 			
 			
 		//Refresh	
-		} else if (ob==btnRefresh) {
-			
-			//다시 출력할 리스트에 모델을 통해 값을 받아옴
-			list = diaryModel.showAllTable();
-			
-			showTable();
 		}
-	}
+//		 else if (ob==btnRefresh) {
+//			
+//			//다시 출력할 리스트에 모델을 통해 값을 받아옴
+//			list = diaryModel.showAllTable();
+//			
+//			showTable();
+		}
+	
 	
 	
 	
