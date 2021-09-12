@@ -142,11 +142,11 @@ public class InsertDiary extends JFrame implements ActionListener{
 				DiaryDTO dto = new DiaryDTO();
 				
 				//내용 입력 안할 경우
-				if(tfTitle.getText().length()==0) {
+				if(tfTitle.getText().trim().length()==0) {
 					JOptionPane.showMessageDialog(null, "제목을 입력해주세요");
 					return;
 							
-				} else if (tfContent.getText().length()==0) {
+				} else if (tfContent.getText().trim().length()==0) {
 					JOptionPane.showMessageDialog(null, "내용을 입력해주세요");
 					return;
 				}
